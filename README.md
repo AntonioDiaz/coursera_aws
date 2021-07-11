@@ -2,8 +2,6 @@
 ## Building Modern Java Applications on AWS
 
 
-
-
 https://www.coursera.org/learn/building-modern-java-applications-on-aws/
 
 
@@ -30,5 +28,14 @@ Create an asynchronous state machine using AWS __Step Functions__ for a reportin
 Use AWS __X-Ray__ to trace requests through your distributed application. You will also make improvements to your application using various AWS service features like Amazon API Gateway Response Caching, as well as code modifications. Then you will test and view the performance improvements in the AWS X-Ray Console.
 
 
+## Week 01
 
+* Architecture  
+<img width="1277" alt="Screenshot 2021-07-11 at 19 50 45" src="https://user-images.githubusercontent.com/725743/125205377-35baea00-e282-11eb-8899-a1726efcbdad.png">
+
+
+* Into to Cloud9
+
+* Introduction to AWS API Management Console CLI SDK
+<img width="1277" alt="Screenshot 2021-07-11 at 19 50 45" src="https://user-images.githubusercontent.com/725743/125206020-3d2fc280-e285-11eb-8f29-647964393d6a.png">
 
