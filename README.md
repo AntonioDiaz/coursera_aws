@@ -1,9 +1,8 @@
 
-## Building Modern Java Applications on AWS
+# Building Modern Java Applications on AWS
 
-<!-- TOC -->
+<!-- TOC updateonsave:true depthfrom:2 -->
 
-- [Building Modern Java Applications on AWS](#building-modern-java-applications-on-aws)
 - [Intro](#intro)
 - [Labs](#labs)
 - [Week 01](#week-01)
