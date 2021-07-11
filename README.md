@@ -1,7 +1,21 @@
 
 ## Building Modern Java Applications on AWS
 
+<!-- TOC -->
 
+- [Building Modern Java Applications on AWS](#building-modern-java-applications-on-aws)
+- [Intro](#intro)
+- [Labs](#labs)
+- [Week 01](#week-01)
+- [Week 02](#week-02)
+- [Week 03](#week-03)
+- [Week 04](#week-04)
+- [Week 05](#week-05)
+- [Week 06](#week-06)
+
+<!-- /TOC -->
+
+## Intro
 https://www.coursera.org/learn/building-modern-java-applications-on-aws/
 
 
@@ -39,3 +53,13 @@ Use AWS __X-Ray__ to trace requests through your distributed application. You wi
 * Introduction to AWS API Management Console CLI SDK
 <img width="1277" alt="Screenshot 2021-07-11 at 19 50 45" src="https://user-images.githubusercontent.com/725743/125206020-3d2fc280-e285-11eb-8f29-647964393d6a.png">
 
+
+## Week 02
+
+## Week 03
+
+## Week 04
+
+## Week 05
+
+## Week 06
