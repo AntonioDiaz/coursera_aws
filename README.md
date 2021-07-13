@@ -118,6 +118,17 @@ Check Maven Version
     mvn -v
 ````
 
+* AWS SDK for Java uses unchecked exceptions
+    * AmazonServiceException
+    * AmazonClientException
+
+* Default credential chain
+    * Environment variables
+    * Java system properties
+    * Default credentials profile
+    * Amazon EXS credential provider
+    * Instance profile credentials (IAM role)
+
 ## Week 02
 
 ## Week 03
