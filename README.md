@@ -10,6 +10,8 @@
     - [Testing Cloud9](#testing-cloud9)
     - [Lab 1](#lab-1)
 - [Week 02 - API Gateway](#week-02---api-gateway)
+    - [Mocking GET Response](#mocking-get-response)
+    - [Mocking POST](#mocking-post)
 - [Week 03](#week-03)
 - [Week 04](#week-04)
 - [Week 05](#week-05)
@@ -187,11 +189,12 @@ https://ada-2021-07-14-s3site.s3-us-west-2.amazonaws.com/index.html
 * Models and Mapping
     * Validate request / responses with models
     * Transform request / resposes with mappings
-* Mocking GET Response
-    * Go to Integration Response
-    * On mapping templates copy the response.  
+### Mocking GET Response
+* Go to Integration Response
+* On mapping templates copy the response.  
 <img width="1225" alt="integration_response" src="https://user-images.githubusercontent.com/725743/126361216-6f3db535-1cc4-45a4-ac44-ffcac17e1cf0.png">
-    * Mock response example:
+* Mock response example
+
 ```json
     [
     #if ($input.params('role')=="manager")
@@ -210,8 +213,9 @@ https://ada-2021-07-14-s3site.s3-us-west-2.amazonaws.com/index.html
     #end
     ]
 ```
-* Mocking POST
-    * Generate the Model on the left menu "Models"  
+
+### Mocking POST
+* Generate the Model on the left menu "Models"  
 ```json
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
@@ -231,8 +235,8 @@ https://ada-2021-07-14-s3site.s3-us-west-2.amazonaws.com/index.html
 }
 ```
 
-    * Create the POST method
-    * On Method Request, select the new mapping on the "Request body" and "validate body".
+* Create the POST method
+* On Method Request, select the new mapping on the "Request body" and "validate body".
 
 <img width="976" alt="api_gateway_model_validation" src="https://user-images.githubusercontent.com/725743/126364081-427842df-473f-4df5-a47e-7adcf58cd190.png">
 
