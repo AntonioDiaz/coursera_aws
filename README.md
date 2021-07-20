@@ -8,7 +8,8 @@
 - [Week 01](#week-01)
     - [Reading: Cloud9, AWS APIs, AWS CLI](#reading-cloud9-aws-apis-aws-cli)
     - [Testing Cloud9](#testing-cloud9)
-- [Week 02](#week-02)
+    - [Lab 1](#lab-1)
+- [Week 02 - API Gateway](#week-02---api-gateway)
 - [Week 03](#week-03)
 - [Week 04](#week-04)
 - [Week 05](#week-05)
@@ -129,7 +130,111 @@ Check Maven Version
     * Amazon EXS credential provider
     * Instance profile credentials (IAM role)
 
-## Week 02
+### Lab 1
+Get the front end up, by uploading a simple front-end where a user can search for an item.
+* Steps  
+    1. How to create a new S3 bucket using the command line (terminal) on Cloud9. Or the CMD_LINE.
+    2. How to upload specific access permissions for the hosted website, and how to use an IP condition rule to only allow access to a specific IPv4 address.
+    3. How to upload a local website to an S3 bucket, using a script leveraging the AWS SDK (called from Cloud9).  All while setting metadata on those objects.
+    4.[Optional] You will learn what the JS code in the website is doing if you care are interested. This will give you a heads up for how the APIs are being liaised with for the later labs.
+
+* Prepare environment:
+    * Move to folder: `cd /home/ec2-user/environment`
+    * 
+    
+* Command create bucket:
+`aws s3api create-bucket --bucket ada-2021-07-14-s3site --region us-west-2 --create-bucket-configuration LocationConstraint=us-west-2`
+* Create permision file: website_security_policy.json
+```
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": [
+                "arn:aws:s3:::ada-2021-07-14-s3site/*",
+                "arn:aws:s3:::ada-2021-07-14-s3site"
+            ],
+            "Condition": {
+                "IpAddress": {
+                    "aws:SourceIp": [
+                        "81.61.227.13/32"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "DenyOneObjectIfRequestNotSigned",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::ada-2021-07-14-s3site/report.html",
+            "Condition": {
+                "StringNotEquals": {
+                    "s3:authtype": "REST-QUERY-STRING"
+                }
+            }
+        }
+    ]
+}
+```
+
+https://ada-2021-07-14-s3site.s3-us-west-2.amazonaws.com/index.html
+
+## Week 02 - API Gateway
+* Models and Mapping
+    * Validate request / responses with models
+    * Transform request / resposes with mappings
+* Mocking GET Response
+    * Go to Integration Response
+    * On mapping templates copy the response.  
+<img width="1225" alt="integration_response" src="https://user-images.githubusercontent.com/725743/126361216-6f3db535-1cc4-45a4-ac44-ffcac17e1cf0.png">
+    * Mock response example:
+```json
+    [
+    #if ($input.params('role')=="manager")
+    {   
+        "name": "Diego Pablo Simeone",
+        "role": "manager"
+    },{  
+        "name": "Luis Aragones",
+        "role": "manager"
+    }
+    #elseif ($input.params('role')=="player")
+    {  
+        "name": "Diego Godin",
+        "role": "player"
+    }
+    #end
+    ]
+```
+* Mocking POST
+    * Generate the Model on the left menu "Models"  
+```json
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "role"
+  ]
+}
+```
+
+    * Create the POST method
+    * On Method Request, select the new mapping on the "Request body" and "validate body".
+
+<img width="976" alt="api_gateway_model_validation" src="https://user-images.githubusercontent.com/725743/126364081-427842df-473f-4df5-a47e-7adcf58cd190.png">
 
 ## Week 03
 
