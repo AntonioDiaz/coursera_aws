@@ -278,6 +278,7 @@ https://ada-2021-07-14-s3site.s3-us-west-2.amazonaws.com/index.html
 ![cognito_user_pool](https://user-images.githubusercontent.com/725743/127025925-904df7f0-ca98-4a8e-9bb4-f58e19b3616d.png)
 
 ### Cognito Federated Identities
+![cognito_federated_identities](https://user-images.githubusercontent.com/725743/127026939-07cefd1d-9361-4b45-bb31-f882dd039f8b.png)
 
 ## Week 03
 
