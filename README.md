@@ -274,6 +274,11 @@ https://ada-2021-07-14-s3site.s3-us-west-2.amazonaws.com/index.html
 
     * Read more about how to use $stageVariables and other variables and functions you can use in your Mapping templates here: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html    
 
+### Cognigo User Pool
+![cognito_user_pool](https://user-images.githubusercontent.com/725743/127025925-904df7f0-ca98-4a8e-9bb4-f58e19b3616d.png)
+
+### Cognito Federated Identities
+
 ## Week 03
 
 ## Week 04
