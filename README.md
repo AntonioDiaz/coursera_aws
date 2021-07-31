@@ -298,41 +298,65 @@ https://ada-2021-07-14-s3site.s3-us-west-2.amazonaws.com/index.html
     * Execution permissions: What your Lambda function can do. Minimun permision are definded: AwsLambdaBasicExecutionRole.
     * Resouces-based policies: what can invoke or manage your Lambda function.
 
-### Intro Lambda, Lambda execution, Lambda Permissions
-* __AWS Lambda__  
-    * AWS Lambda is a compute service that lets you run code without provisioning or managing servers. AWS Lambda executes your code only when needed and scales automatically, from a few requests per day to thousands per second. You pay only for the compute time you consume - there is no charge when your code is not running. With AWS Lambda, you can run code for virtually any type of application or backend service - all with little to no administration in regards to environment provisioning and scaling.
+### Intro Lambda  
+* AWS Lambda is a compute service that lets you run code without provisioning or managing servers. AWS Lambda executes your code only when needed and scales automatically, from a few requests per day to thousands per second. You pay only for the compute time you consume - there is no charge when your code is not running. With AWS Lambda, you can run code for virtually any type of application or backend service - all with little to no administration in regards to environment provisioning and scaling.
 
-    * Read the Developer Guide for AWS Lambda here: https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html
+* Read the Developer Guide for AWS Lambda here: https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html
 
-* __The Lambda Execution Environment__  
-    * When AWS Lambda executes your Lambda function, it provisions and manages the resources needed to run your Lambda function. When you create a Lambda function, you specify configuration information, such as the amount of memory and maximum execution time that you want to allow for your Lambda function. 
+### The Lambda Execution Environment  
+* When AWS Lambda executes your Lambda function, it provisions and manages the resources needed to run your Lambda function. When you create a Lambda function, you specify configuration information, such as the amount of memory and maximum execution time that you want to allow for your Lambda function. 
 
-    * It takes time to set up an execution context and do the necessary "bootstrapping", which adds some latency each time the Lambda function is invoked. You typically see this latency when a Lambda function is invoked for the first time or after it has been updated because AWS Lambda tries to reuse the execution context for subsequent invocations of the Lambda function.
+* It takes time to set up an execution context and do the necessary "bootstrapping", which adds some latency each time the Lambda function is invoked. You typically see this latency when a Lambda function is invoked for the first time or after it has been updated because AWS Lambda tries to reuse the execution context for subsequent invocations of the Lambda function.
 
-    * After a Lambda function is executed, AWS Lambda maintains the execution context for some time in anticipation of another Lambda function invocation. In effect, the service freezes the execution context after a Lambda function completes, and thats the context for reuse, if AWS Lambda chooses to reuse the context when the Lambda function is invoked again. This execution context reuse approach has the following implications:
+* After a Lambda function is executed, AWS Lambda maintains the execution context for some time in anticipation of another Lambda function invocation. In effect, the service freezes the execution context after a Lambda function completes, and thats the context for reuse, if AWS Lambda chooses to reuse the context when the Lambda function is invoked again. This execution context reuse approach has the following implications:
 
-        * Objects declared outside of the function's handler method remain initialized, providing additional optimization when the function is invoked again. For example, if your Lambda function establishes a database connection, instead of reestablishing the connection, the original connection is used in subsequent invocations. We suggest adding logic in your code to check if a connection exists before creating one.
+    * Objects declared outside of the function's handler method remain initialized, providing additional optimization when the function is invoked again. For example, if your Lambda function establishes a database connection, instead of reestablishing the connection, the original connection is used in subsequent invocations. We suggest adding logic in your code to check if a connection exists before creating one.
 
-    * Each execution context provides __512 MB__ of additional disk space in the /tmp directory. The directory content remains when the execution context is frozen, providing transient cache that can be used for multiple invocations. You can add extra code to check if the cache has the data that you stored. For information on deployment limits, see AWS Lambda limits.
+* Each execution context provides __512 MB__ of additional disk space in the /tmp directory. The directory content remains when the execution context is frozen, providing transient cache that can be used for multiple invocations. You can add extra code to check if the cache has the data that you stored. For information on deployment limits, see AWS Lambda limits.
 
-    * Background processes or callbacks initiated by your Lambda function that did not complete when the function ended resume if AWS Lambda chooses to reuse the execution context. You should make sure any background processes or callbacks in your code are complete before the code exits.
+* Background processes or callbacks initiated by your Lambda function that did not complete when the function ended resume if AWS Lambda chooses to reuse the execution context. You should make sure any background processes or callbacks in your code are complete before the code exits.
 
-    * Read more about the Lambda execution context here: https://docs.aws.amazon.com/lambda/latest/dg/runtimes-context.html
+* Read more about the Lambda execution context here: https://docs.aws.amazon.com/lambda/latest/dg/runtimes-context.html
 
-* __Lambda Permissions__  
-    * There are two types of permissions to be aware of when working with AWS Lambda. 
-        * __Execution Permissions__   
-        A lambda function’s execution permissions are controlled by an IAM Role. When you create a lambda function you associate an IAM Role with the function. This Role will contain policies that either allow or deny specific API calls to be made. In order for the code running in the lambda function to make calls to AWS APIs the execution role must contain the permissions for those API calls. Read more about execution permissions by clicking here: https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html 
+### Lambda Permissions
+There are two types of permissions to be aware of when working with AWS Lambda. 
+* __Execution Permissions__   
+A lambda function’s execution permissions are controlled by an IAM Role. When you create a lambda function you associate an IAM Role with the function. This Role will contain policies that either allow or deny specific API calls to be made. In order for the code running in the lambda function to make calls to AWS APIs the execution role must contain the permissions for those API calls. Read more about execution permissions by clicking here: https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html 
 
-        * __Resource-based policies__.  
-        Resource-based policies are used to control access to invoking and managing a lambda function. Resource-based policies let you grant usage permission to other accounts on a per-resource basis. You also use a resource-based policy to allow an AWS service to invoke your function.
+* __Resource-based policies__.  
+Resource-based policies are used to control access to invoking and managing a lambda function. Resource-based policies let you grant usage permission to other accounts on a per-resource basis. You also use a resource-based policy to allow an AWS service to invoke your function.
 
-    * For Lambda functions, you can grant an account permission to invoke or manage a function. You can add multiple statements to grant access to multiple accounts, or let any account invoke your function. To read more about resource-based permissions click here: https://docs.aws.amazon.com/lambda/latest/dg/access-control-resource-based.html
+* For Lambda functions, you can grant an account permission to invoke or manage a function. You can add multiple statements to grant access to multiple accounts, or let any account invoke your function. To read more about resource-based permissions click here: https://docs.aws.amazon.com/lambda/latest/dg/access-control-resource-based.html
 
-* __Lambda Execution__  
+### Lambda Execution  
 When your code executes in Lambda, the service will spin up a micro-virtual machine that will download your code and all the dependencies required and then execute it. The technology used for those micro-VMs is called __Firecracker__ which is an open source virtualization technology. AWS created this technology with Lambda in mind as well as for multi-tenant container which is being used in the AWS Fargate service. By open-sourcing it, we now allow anyone to contribute and expand the capabilities of this technology. It also allows anyone to use this to build their own version of Lambda on-premises if you really wanted to. You can find more information about this technology here:   
 
 https://firecracker-microvm.github.io/
+
+
+### AWS Lambda Push/Pull Model
+* There are multiple ways to invoke lambda functions. You can invoke the function directly by calling the invoke API as shown in the demos, or you can setup triggers to invoke the lambda function. 
+
+* Read about how other AWS Services integrate with AWS Lambda here: https://docs.aws.amazon.com/lambda/latest/dg/lambda-services.html
+
+* When setting up a trigger, there are two main models: 
+    1.  __The push model__  
+        * Is where a trigger sends an event to lambda, which then invokes your lambda function. When the push model is used, the __resource-based policy__ must allow the trigger to invoke the lambda function.  
+        * Examples: S3, API Gateway.
+    <img width="1409" alt="lambda_push" src="https://user-images.githubusercontent.com/725743/127732085-fc71cdcf-bd71-4146-aaae-7240ff114650.png">
+
+    2. __The pull model__  
+        * Some AWS Services being configured as triggers for lambda functions do not push events to lambda, but instead are the __source of events__, and AWS Lambda pulls the event from the event source, and then invokes the lambda function.  
+        * A common example of a trigger that follows this model is Amazon Simple Queue Service (SQS). SQS allows messages to build up in a queue, and then your code would process those messages. Instead of having SQS invoke the lambda every time it gets a message, the messages build up in the queue and you define an __Event Source Mapping__ as the trigger for the lambda function.    
+        * AWS Lambda will pull the events from SQS to the lambda function. You can configure how many messages to pull and at what frequency. 
+        * Your code does not need to handle polling the queue for messages, instead the lambda service does that for you and passes the messages to your code through it’s event. 
+        * Services that follow pull model: SQS, Amazon Kinesis, Amazon DynamoBD Stream.
+        * Execution Permision on the Lambda must include the service where you need to pull. 
+<img width="500" alt="lambda_pull" src="https://user-images.githubusercontent.com/725743/127732314-402c118e-ab29-4319-86b0-ff06988f8c68.png">
+
+
+
+Read more about Event Source Mappings here: https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventsourcemapping.html
 
 
 
