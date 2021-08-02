@@ -390,6 +390,176 @@ The following documentation shows you how to configure Lambda to meet your secur
 * __Version__ includes the code and all associated dependencies, the Lambda run-time for the function, all of the setting and environment variables, and a unique Amazon resource name or ARN.
 * __Alias__ is like a pointer to a specific Lambda function version and just like the functions and versions, it can be accessed by utilizing the alias ARN.
 
+* AWS Lambda versions and aliases can help to provide a lot of control when managing your function code. Make sure you understand their base concepts to best utilize these features.
+
+* You can publish a new version of your AWS Lambda function when you create new or update existing functions. Each version of a lambda function gets it’s own unique Amazon Resource Name (ARN). You can then use these ARNs to use different versions of the Lambda function for different purposes.
+
+* You also have the ability to create aliases for AWS Lambda functions. Aliases are essentially pointers to one specific Lambda version.  
+
+* Each alias you create has a unique ARN. An alias can only point to one function version, not to another alias. You can update an alias to point to a new version of the function.
+
+* This is handy for a number of reasons, one being the following: consider event sources such as Amazon S3 which can be configured to invoke your Lambda function. These event sources maintain a mapping that identifies the function to invoke when events occur. If you specify a Lambda function alias in the mapping configuration, you don't need to update the mapping when the function version changes.
+
+* Read about versioning here: https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html
+
+* Read about aliases here: https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html
+
+### Creating a Java Lambda Function 
+* Objects in handler:
+    * __Event__: information on the request
+        * You can define your own custom import type
+    * __Context__: informatin about the invocation
+        * AWS request ID
+        * Lambda function version
+        * ARN
+        * Execution environment details
+        * Cognito identity Information
+    * __Return__ can be a primitive or a json.
+
+* You can run Java code in AWS Lambda. Lambda provides runtimes for Java that execute your code to process events. Your code runs in an Amazon Linux environment that includes AWS credentials from an AWS Identity and Access Management (IAM) role that you manage.
+
+* Read more about Java Lambda Functions at: https://docs.aws.amazon.com/lambda/latest/dg/lambda-java.html
+
+* Your Lambda function's __handler__ is the method in your function code that processes events. When your function is invoked, Lambda runs the handler method. When the handler exits or returns a response, it becomes available to handle another event. A handler for a Java Lambda function can take multiple forms. 
+
+* For Java functions, you can use POJOs for custom input and output types. Read about handlers here: https://docs.aws.amazon.com/lambda/latest/dg/java-handler.html
+
+* To create a Java Lambda Function you need to write your code and then package it up into a __deployment package__. A deployment package is a ZIP archive that contains your compiled function code and dependencies. You can upload the package directly to Lambda, or you can use an Amazon S3 bucket, and then upload it to Lambda. If the deployment package is larger than 50 MB, you must use Amazon S3.
+
+* Read about how to create a deployment package for a Java Lambda Function at: https://docs.aws.amazon.com/lambda/latest/dg/java-package.html
+
+* Read about how to create an AWS Lambda function with the AWS Toolkit at: https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/create-new-lambda.html
+
+* Read about running and debugging an AWS Lambda function with the AWS Toolkit at: https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/invoke-lambda.html
+
+### Handler GET Dragons
+```java
+package com.mycompany.app;
+
+//imports ...
+
+public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+
+    private static final AWSSimpleSystemsManagement ssm = AWSSimpleSystemsManagementClientBuilder.defaultClient();
+    private static final AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
+
+    @Override
+    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
+        String dragonData = readDragonData(event);
+        return generateResponse(dragonData);
+    }
+
+    protected static String readDragonData(APIGatewayProxyRequestEvent event) {
+        Map<String,String> queryParams = event.getQueryStringParameters();
+        String bucketName = getBucketName();
+        String key = getKey();
+        String query = getQuery(queryParams);
+        SelectObjectContentRequest request = generateJSONRequest(bucketName, key, query);
+        return queryS3(request);
+    }
+
+    private static String queryS3(SelectObjectContentRequest request) {
+        final AtomicBoolean isResultComplete = new AtomicBoolean(false);
+        // Call S3 Select
+        SelectObjectContentResult result = s3Client.selectObjectContent(request);
+
+        // Anonymous inner class implementation
+        // to define what actions to complete 
+        // for every object in the result stream
+        InputStream resultInputStream = result.getPayload().getRecordsInputStream(
+                new SelectObjectContentEventVisitor() {
+                    @Override
+                    public void visit(SelectObjectContentEvent.StatsEvent event)
+                    {
+                        System.out.println(
+                                "Received Stats, Bytes Scanned: " + event.getDetails().getBytesScanned()
+                                        +  " Bytes Processed: " + event.getDetails().getBytesProcessed());
+                    }
+
+                    /*
+                     * An End Event informs that the request has finished successfully.
+                     */
+                    @Override
+                    public void visit(SelectObjectContentEvent.EndEvent event)
+                    {
+                        isResultComplete.set(true);
+                        System.out.println("Received End Event. Result is complete.");
+                    }
+                }
+        );
+
+        String text = null;
+        try {
+            text = IOUtils.toString(resultInputStream, StandardCharsets.UTF_8.name());
+        } catch (IOException e) {
+            // In the real world, you should do actual error handling here
+            // do not just log a message and move on in a production system
+            System.out.println(e.getMessage());
+        }
+        return text;
+    }
+
+    private static SelectObjectContentRequest generateJSONRequest(String bucketName, String key, String query) {
+        SelectObjectContentRequest request = new SelectObjectContentRequest();
+        request.setBucketName(bucketName);
+        request.setKey(key);
+        request.setExpression(query);
+        request.setExpressionType(ExpressionType.SQL);
+
+        InputSerialization inputSerialization = new InputSerialization();
+        inputSerialization.setJson(new JSONInput().withType("Document"));
+        inputSerialization.setCompressionType(CompressionType.NONE);
+        request.setInputSerialization(inputSerialization);
+
+        OutputSerialization outputSerialization = new OutputSerialization();
+        outputSerialization.setJson(new JSONOutput());
+        request.setOutputSerialization(outputSerialization);
+
+        return request;
+    }
+
+    private static String getBucketName() {
+        GetParameterRequest bucketParameterRequest = new GetParameterRequest().withName("dragon_data_bucket_name").withWithDecryption(false);
+        GetParameterResult bucketResult = ssm.getParameter(bucketParameterRequest);
+        return bucketResult.getParameter().getValue();
+    }
+
+    private static String getKey() {
+        GetParameterRequest keyParameterRequest = new GetParameterRequest().withName("dragon_data_file_name").withWithDecryption(false);
+        GetParameterResult keyResult = ssm.getParameter(keyParameterRequest);
+        return keyResult.getParameter().getValue();
+    }
+
+    private static String getQuery(Map<String,String> queryParams) {
+        if(queryParams != null) {
+            System.out.println("we have params");
+            if (queryParams.containsKey("family")) {
+                System.out.println(queryParams.get("family"));
+                return "select * from S3Object[*][*] s where s.family_str =  '" + queryParams.get("family") + "'";
+
+            } else if (queryParams.containsKey("dragonName")) {
+                return "select * from S3Object[*][*] s where s.dragon_name_str =  '" + queryParams.get("dragonName") + "'";
+            }
+        }
+
+        return "select * from s3object s";
+    }
+    
+    private static APIGatewayProxyResponseEvent generateResponse(String dragons) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
+        response.setStatusCode(200);
+        response.setBody(gson.toJson(dragons));
+        return response;
+    }
+}
+```
+
+### Lambda Commands
+* Create (first we need to build project and create the zip):  
+`aws lambda create-function --function-name listDragons --runtime java8  --role <IAM ROLE ARN> --handler com.mycompany.app.App::handleRequest --publish --zip-file fileb://my-app.zip --timeout 90 --memory-size 448`
+* Execute:  
+`aws lambda invoke --function-name listDragons output.txt`
 
 ## Week 04
 
