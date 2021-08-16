@@ -618,22 +618,37 @@ aws lambda create-function
 * Read the AWS Step Functions Documentation here: https://aws.amazon.com/step-functions/getting-started/
 
 #### State Types
-States can perform a variety of functions in your state machine:  
+States can perform a variety of functions in your state machine  
+There are 8 states  
 * Do some work in your state machine (a __Task state__)
 <img width="1618" alt="step_function_03" src="https://user-images.githubusercontent.com/725743/129551804-dfa30262-f4b6-4db3-94e5-284d077e4aa4.png">
+
 * Make a choice between branches of execution (a __Choice state__)
-<img width="1242" alt="step_function_05" src="https://user-images.githubusercontent.com/725743/129587574-ef2379df-4ef0-4ade-816f-d1210a051294.png">
+<img width="1728" alt="step_function_05" src="https://user-images.githubusercontent.com/725743/129588301-9daa80d6-79d3-4300-b2a9-2e4156e603ab.png">
+
 * Stop an execution with a failure or success (a __Fail or Succeed state__)
 <img width="1618" alt="step_function_04" src="https://user-images.githubusercontent.com/725743/129553794-1f86a42f-a17a-4519-b650-99d44c137dd5.png">
+
 * Simply pass its input to its output or inject some fixed data (a __Pass state__)
+
+
 * Provide a delay for a certain amount of time or until a specified time/date (a __Wait state__)
+<img width="1637" alt="step_function_08" src="https://user-images.githubusercontent.com/725743/129590459-15d2e606-6eb4-4c23-b928-24327598bb45.png">
+
+
 * Begin parallel branches of execution (a __Parallel state__)
+<img width="1728" alt="step_function_06" src="https://user-images.githubusercontent.com/725743/129588287-45abfcd1-a885-4627-99a2-1d7766a225ce.png">
+
+
 * Dynamically iterate steps (a __Map state__)  
+<img width="1728" alt="step_function_07_map" src="https://user-images.githubusercontent.com/725743/129589484-4b17c2a1-12a4-40e5-a58d-4a32bb50228e.png">
+
+<img width="1728" alt="step_function_07_iterator" src="https://user-images.githubusercontent.com/725743/129589510-7fb1d3d6-02aa-4511-a109-1a962eca9d9a.png">
 
 #### State control
 * Any state type other than the Fail type have the full control over the input and the output. 
 * You can control those using the __InputPath__, __ResultPath__ and __OutputPath__.
-* A path is a string beginning with $ that you can use to identify components within JSON text. 
+* __A path is a string beginning with $ that you can use to identify components within JSON text__. 
 * Using the __InputPath__, you can determine which portion of the data sent as an input to the state to send into the processing of that state. For example, that could be a Lambda function. Then, you can insert the result from that Lambda function in a node inside of the input. This is useful when you want to be able to keep the data from the input as well as the result of Lambda function without having to do it within the code of the Lambda. Thus, keeping your flow separate from the Lambda microservice.  
 * Finally, you can apply another filter from that combination of data by using an __OutputPath__ to decide which node you want to keep. You can find an example of how these three works together here: https://docs.aws.amazon.com/step-functions/latest/dg/input-output-example.html
 
