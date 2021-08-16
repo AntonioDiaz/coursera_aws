@@ -29,6 +29,7 @@
     - [Handler GET Dragons](#handler-get-dragons)
     - [Lambda Commands](#lambda-commands)
 - [Week 04 - Step Functions](#week-04---step-functions)
+    - [Notes](#notes)
     - [Reading 01: Step Functions Terminology, State Types](#reading-01-step-functions-terminology-state-types)
         - [AWS Step Functions Terminology](#aws-step-functions-terminology)
         - [State Types](#state-types)
@@ -578,6 +579,18 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
 `aws lambda invoke --function-name listDragons output.txt`
 
 ## Week 04 - Step Functions
+### Notes
+* __Amazon State Languaje__: JSON-based, structured languaged used to define state machines and their processing workflow.
+* __State__ are individual elements of the state machine that make decisions based on the input, perform actions and provide an output.
+* __Task__ represent one unit of work done through activities (program code) or AWS Services (such as AWS Lambda).
+* Hello world example:
+<img width="1396" alt="step_function_01" src="https://user-images.githubusercontent.com/725743/129547272-395767d0-8aa5-47e9-99d6-b94d59bc3d3a.png">
+* Execution example:
+<img width="1399" alt="step_function_02" src="https://user-images.githubusercontent.com/725743/129550454-1574acd5-88a5-49c9-8a9e-76d05c65cd40.png">
+
+
+
+
 ### Reading 01: Step Functions Terminology, State Types
 #### AWS Step Functions Terminology  
 * AWS Step Functions is a reliable service to coordinate distributed components and analyze the flow of your distributed workflow.
@@ -599,13 +612,13 @@ States can perform a variety of functions in your state machine:
 
 #### State control
 * Any state type other than the Fail type have the full control over the input and the output. 
-* You can control those using the “InputPath”, “ResultPath” and “OutputPath”.
+* You can control those using the __InputPath__, __ResultPath__ and __OutputPath__.
 * A path is a string beginning with $ that you can use to identify components within JSON text. 
-* Using the “InputPath”, you can determine which portion of the data sent as an input to the state to send into the processing of that state. For example, that could be a Lambda function. Then, you can insert the result from that Lambda function in a node inside of the input. This is useful when you want to be able to keep the data from the input as well as the result of Lambda function without having to do it within the code of the Lambda. Thus, keeping your flow separate from the Lambda microservice.  
-* Finally, you can apply another filter from that combination of data by using an “OutputPath” to decide which node you want to keep. You can find an example of how these three works together here: https://docs.aws.amazon.com/step-functions/latest/dg/input-output-example.html
+* Using the __InputPath__, you can determine which portion of the data sent as an input to the state to send into the processing of that state. For example, that could be a Lambda function. Then, you can insert the result from that Lambda function in a node inside of the input. This is useful when you want to be able to keep the data from the input as well as the result of Lambda function without having to do it within the code of the Lambda. Thus, keeping your flow separate from the Lambda microservice.  
+* Finally, you can apply another filter from that combination of data by using an __OutputPath__ to decide which node you want to keep. You can find an example of how these three works together here: https://docs.aws.amazon.com/step-functions/latest/dg/input-output-example.html
 
 #### Sample Projects  
-There are many sample projects provided through the AWS Documentation which you can find here: https://docs.aws.amazon.com/step-functions/latest/dg/create-sample-projects.html    
+* There are many sample projects provided through the AWS Documentation which you can find here: https://docs.aws.amazon.com/step-functions/latest/dg/create-sample-projects.html    
 
 ### Reading 02: Step Function Integrations
 #### AWS Step Function Integrations  
