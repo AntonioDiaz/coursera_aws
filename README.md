@@ -25,7 +25,23 @@
     - [Security and Compliance with AWS Lambda](#security-and-compliance-with-aws-lambda)
     - [Asynchronous vs Synchronous Lambda Functions](#asynchronous-vs-synchronous-lambda-functions)
     - [Versions and Alias](#versions-and-alias)
-- [Week 04](#week-04)
+    - [Creating a Java Lambda Function](#creating-a-java-lambda-function)
+    - [Handler GET Dragons](#handler-get-dragons)
+    - [Lambda Commands](#lambda-commands)
+- [Week 04 - Step Functions](#week-04---step-functions)
+    - [Reading 01: Step Functions Terminology, State Types](#reading-01-step-functions-terminology-state-types)
+        - [AWS Step Functions Terminology](#aws-step-functions-terminology)
+        - [State Types](#state-types)
+        - [State control](#state-control)
+        - [Sample Projects](#sample-projects)
+    - [Reading 02: Step Function Integrations](#reading-02-step-function-integrations)
+        - [AWS Step Function Integrations](#aws-step-function-integrations)
+        - [Service Integration Patterns](#service-integration-patterns)
+    - [Reading 03: Express vs Standard, Callback URL and Task Tokens](#reading-03-express-vs-standard-callback-url-and-task-tokens)
+        - [Express vs Standard State Machines](#express-vs-standard-state-machines)
+        - [Activities](#activities)
+        - [Callback Pattern Examples](#callback-pattern-examples)
+        - [AWS Step Functions Best Practices](#aws-step-functions-best-practices)
 - [Week 05](#week-05)
 - [Week 06](#week-06)
 
@@ -561,7 +577,110 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
 * Execute:  
 `aws lambda invoke --function-name listDragons output.txt`
 
-## Week 04
+## Week 04 - Step Functions
+### Reading 01: Step Functions Terminology, State Types
+#### AWS Step Functions Terminology  
+* AWS Step Functions is a reliable service to coordinate distributed components and analyze the flow of your distributed workflow.
+* Step Functions is based on the concepts of tasks and state machines. You define state machines using the JSON-based Amazon States Language.
+
+* Step Functions provides a graphical console to arrange and visualize the components of your application as a series of steps. This makes it simple to build and run multi-step applications. Step Functions automatically triggers and tracks each step, and retries when there are errors, so your application executes in order and as expected.
+
+* Read the AWS Step Functions Documentation here: https://aws.amazon.com/step-functions/getting-started/
+
+#### State Types
+States can perform a variety of functions in your state machine:  
+* Do some work in your state machine (a __Task state__)
+* Make a choice between branches of execution (a __Choice state__)
+* Stop an execution with a failure or success (a __Fail or Succeed state__)
+* Simply pass its input to its output or inject some fixed data (a __Pass state__)
+* Provide a delay for a certain amount of time or until a specified time/date (a __Wait state__)
+* Begin parallel branches of execution (a __Parallel state__)
+* Dynamically iterate steps (a __Map state__)  
+
+#### State control
+* Any state type other than the Fail type have the full control over the input and the output. 
+* You can control those using the “InputPath”, “ResultPath” and “OutputPath”.
+* A path is a string beginning with $ that you can use to identify components within JSON text. 
+* Using the “InputPath”, you can determine which portion of the data sent as an input to the state to send into the processing of that state. For example, that could be a Lambda function. Then, you can insert the result from that Lambda function in a node inside of the input. This is useful when you want to be able to keep the data from the input as well as the result of Lambda function without having to do it within the code of the Lambda. Thus, keeping your flow separate from the Lambda microservice.  
+* Finally, you can apply another filter from that combination of data by using an “OutputPath” to decide which node you want to keep. You can find an example of how these three works together here: https://docs.aws.amazon.com/step-functions/latest/dg/input-output-example.html
+
+#### Sample Projects  
+There are many sample projects provided through the AWS Documentation which you can find here: https://docs.aws.amazon.com/step-functions/latest/dg/create-sample-projects.html    
+
+### Reading 02: Step Function Integrations
+#### AWS Step Function Integrations  
+* AWS Step Functions integrates with some AWS services so that you can call API actions, and coordinate executions directly from the __Amazon States Language__ in Step Functions. You can directly call and pass parameters to the APIs of those services.
+
+* You coordinate these services directly from a Task state in the Amazon States Language. For example, using Step Functions, you can call other services to: 
+    * Invoke an AWS Lambda function
+    * Run an AWS Batch job and then perform different actions based on the results
+    * Insert or get an item from Amazon DynamoDB
+    * Run an Amazon Elastic Container Service (Amazon ECS) task and wait for it to complete
+    * Publish to a topic in Amazon Simple Notification Service (Amazon SNS)
+    * Send a message in Amazon Simple Queue Service (Amazon SQS).
+    * Manage a job for AWS Glue or Amazon SageMaker.
+    * Build workflows for executing Amazon EMR jobs
+    * Launch an AWS Step Functions workflow execution
+
+#### Service Integration Patterns
+* AWS Step Functions integrates with services directly in the Amazon States Language. You can control these AWS services using three service integration patterns:
+    * Call a service and let Step Functions progress to the next state immediately after it gets an HTTP response. Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-default
+    * Call a service and have Step Functions wait for a job to complete. Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-sync
+    * Call a service with a task token and have Step Functions wait until that token is returned with a payload. Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-wait-token   
+
+### Reading 03: Express vs Standard, Callback URL and Task Tokens
+#### Express vs Standard State Machines
+* __Standard Workflows__ are ideal for long-running, durable, and auditable workflows. They can run for up to a year and you can retrieve the full execution history using the Step Functions API, up to 90 days after your execution completes. Standard Workflows employ an at-most-once model, where your tasks and states are never executed more than once unless you have specified Retry behavior in ASL. This makes them suited to orchestrating non-idempotent actions.
+
+* __Express Workflows__ are ideal for high-volume, event-processing workloads such as IoT data ingestion, streaming data processing and transformation, and mobile application backends. They can run for up to five minutes. Express Workflows employ an at-least-once model, where there is a possibility that an execution might be run more than once. This makes them ideal for orchestrating idempotent actions.
+
+#### Activities
+* In AWS Step Functions, you can create activities. Activities are used as a way to associate code running somewhere like Amazon EC2 or Amazon ECS, or any external compute (known as an activity worker) with a specific task in a state machine.
+
+* Since this code lives in an environment that is not as tightly integrated with AWS Step Functions, like AWS Lambda for example, there is a specific way in which you need to setup your communications between your activity worker and your state machine.
+
+* When you create an activity in Step Function you will get a generated ARN for that state. You will use this ARN for your activity worker to poll for events.
+
+* When Step Functions reaches an activity task state, the workflow waits for an activity worker to poll for a task.
+
+* Unlike with AWS Lambda, activities need to poll for a task. This means that the code running acting as the activity worker must include code for this polling.
+
+* The activity worker polls Step Functions by using the GetActivityTask API, and sending the ARN for the related activity in the request. GetActivityTask returns a response including a string of JSON input for the task and a taskToken.
+
+* A task token is a unique identifier for the task. 
+
+* After the activity worker completes its work, it can provide a report of its success or failure by using SendTaskSuccess or SendTaskFailure. These two calls use the taskToken provided by GetActivityTask to associate the result with that task.
+
+#### Callback Pattern Examples
+* Some applications will require a callback pattern to be implemented. Callback tasks provide a way to pause a workflow until a task token is returned. A task might need to wait for a human approval, integrate with a third party, or call legacy systems. For tasks like these, you can pause Step Functions indefinitely, and wait for an external process or workflow to complete.
+
+* Read some examples using callback patterns here: https://docs.aws.amazon.com/step-functions/latest/dg/callback-task-sample-sqs.html
+
+* Read about an example using Task Tokens here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-wait-example
+
+#### AWS Step Functions Best Practices
+* __Use Timeouts to Avoid Stuck Executions__  
+    * By default, the Amazon States Language doesn't set timeouts in state machine definitions. Without a timeout set, the state will wait on a response to move on. If something goes wrong and TimeoutSeconds isn't specified, an execution is stuck waiting for a response that will never come.
+    * To avoid this issue, specify a reasonable timeout when you create a task in your state machine.
+
+* __Use ARNs Instead of Passing Large Payloads__
+    * There is a size limit on the payload you can pass between states. Currently, that limit it set at 32 KB. If you need to pass data between states that exceeds the size limit, use Amazon Simple Storage Service (Amazon S3) to store the data, and pass the Amazon Resource Name (ARN) instead of the raw data.
+
+* __Avoid Reaching the History Quota__
+    * AWS Step Functions has a hard quota of 25,000 entries in the execution history. To avoid reaching this quota for long-running executions, implement a pattern that uses an AWS Lambda function that can start a new execution of your state machine to split ongoing work across multiple workflow executions.  
+
+* __Handle Lambda Service Exceptions__
+    * Sometimes, AWS Lambda might return service exceptions to a state. You should proactively handle these exceptions so if they ever occur, you have accounted for which path to take and how to recover or retry after encountering the error.
+
+* __Avoid Latency When Polling for Activity Tasks__
+    * If you only have a small number of polls waiting for a response, it's possible that all requests will queue up behind the blocked request and stop. However, if you have a large number of outstanding polls for each activity Amazon Resource Name (ARN), and some percentage of your requests are stuck waiting, there will be many more that can still get a taskToken and begin to process work.
+    * For production systems, we recommend at least 100 open polls per activity ARN's at each point in time. If one poll gets blocked, and a portion of those polls queue up behind it, there are still many more requests that will receive a taskToken to process work while the GetActivityTask request is blocked.
+
+* __Choosing Standard or Express Workflows__
+    * You can choose Standard Workflows when you need long-running, durable, and auditable workflows, or Express Workflows for high-volume, event processing workloads.
+
+* Read more about Step Functions Best Practices here: https://docs.aws.amazon.com/step-functions/latest/dg/bp-express.html
+
 
 ## Week 05
 
