@@ -30,6 +30,7 @@
     - [Lambda Commands](#lambda-commands)
 - [Week 04 - Step Functions](#week-04---step-functions)
     - [Notes](#notes)
+    - [Step Funtions Services Integrations](#step-funtions-services-integrations)
     - [Reading 01: Step Functions Terminology, State Types](#reading-01-step-functions-terminology-state-types)
         - [AWS Step Functions Terminology](#aws-step-functions-terminology)
         - [State Types](#state-types)
@@ -599,14 +600,19 @@ aws lambda create-function
 * Execution example
 <img width="1399" alt="step_function_02" src="https://user-images.githubusercontent.com/725743/129550454-1574acd5-88a5-49c9-8a9e-76d05c65cd40.png">
 
-* Task  example
+### Step Funtions Services Integrations
+* Lambda invocation (two ways):
+<img width="1217" alt="step_function_10_lambda_invocation" src="https://user-images.githubusercontent.com/725743/129592765-ea7f4b2f-65a8-48a4-9cff-ba5aa5f7ed52.png">
+<img width="637" alt="step_function_09_lambda_invocation" src="https://user-images.githubusercontent.com/725743/129592290-16f9c70f-e8ff-4ca5-8e3d-1fb3f0c2639b.png">
 
 
-* Retry example
+* DynamoDB integration
+<img width="600" alt="step_function_11_dynamodb_invocation" src="https://user-images.githubusercontent.com/725743/129594653-6c86caea-0b84-4166-9d7d-7e077cbd062d.png">
 
 
-* Step Function State Types
-    * Task State: can be an activity or a service integration.
+* SNS integration  
+<img width="600" alt="step_function_12_sns_invocation" src="https://user-images.githubusercontent.com/725743/129595109-109c93ec-c90d-4c2b-ab68-7ef6d2681166.png">
+
 
 ### Reading 01: Step Functions Terminology, State Types
 #### AWS Step Functions Terminology  
@@ -671,10 +677,14 @@ There are 8 states
     * Launch an AWS Step Functions workflow execution
 
 #### Service Integration Patterns
-* AWS Step Functions integrates with services directly in the Amazon States Language. You can control these AWS services using three service integration patterns:
-    * Call a service and let Step Functions progress to the next state immediately after it gets an HTTP response. Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-default
-    * Call a service and have Step Functions wait for a job to complete. Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-sync
-    * Call a service with a task token and have Step Functions wait until that token is returned with a payload. Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-wait-token   
+* AWS Step Functions integrates with services directly in the Amazon States Language. 
+* You can control these AWS services using three service integration patterns:
+    * Call a service and let Step Functions progress to the next state immediately after it gets an HTTP response.  
+    Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-default
+    * Call a service and have Step Functions wait for a job to complete.  
+    Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-sync
+    * Call a service with a task token and have Step Functions wait until that token is returned with a payload.  
+    Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-wait-token   
 
 ### Reading 03: Express vs Standard, Callback URL and Task Tokens
 #### Express vs Standard State Machines
