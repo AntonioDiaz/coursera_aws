@@ -574,7 +574,16 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
 
 ### Lambda Commands
 * Create (first we need to build project and create the zip):  
-`aws lambda create-function --function-name listDragons --runtime java8  --role <IAM ROLE ARN> --handler com.mycompany.app.App::handleRequest --publish --zip-file fileb://my-app.zip --timeout 90 --memory-size 448`
+```bash
+aws lambda create-function 
+    --function-name listDragons --runtime java8  
+    --role <IAM ROLE ARN> 
+    --handler com.mycompany.app.App::handleRequest 
+    --publish 
+    --zip-file fileb://my-app.zip 
+    --timeout 90 
+    --memory-size 448
+```
 * Execute:  
 `aws lambda invoke --function-name listDragons output.txt`
 
@@ -583,13 +592,21 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
 * __Amazon State Languaje__: JSON-based, structured languaged used to define state machines and their processing workflow.
 * __State__ are individual elements of the state machine that make decisions based on the input, perform actions and provide an output.
 * __Task__ represent one unit of work done through activities (program code) or AWS Services (such as AWS Lambda).
+
 * Hello world example:
 <img width="1396" alt="step_function_01" src="https://user-images.githubusercontent.com/725743/129547272-395767d0-8aa5-47e9-99d6-b94d59bc3d3a.png">
-* Execution example:
+
+* Execution example
 <img width="1399" alt="step_function_02" src="https://user-images.githubusercontent.com/725743/129550454-1574acd5-88a5-49c9-8a9e-76d05c65cd40.png">
 
+* Task  example
 
 
+* Retry example
+
+
+* Step Function State Types
+    * Task State: can be an activity or a service integration.
 
 ### Reading 01: Step Functions Terminology, State Types
 #### AWS Step Functions Terminology  
@@ -603,8 +620,11 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
 #### State Types
 States can perform a variety of functions in your state machine:  
 * Do some work in your state machine (a __Task state__)
+<img width="1618" alt="step_function_03" src="https://user-images.githubusercontent.com/725743/129551804-dfa30262-f4b6-4db3-94e5-284d077e4aa4.png">
 * Make a choice between branches of execution (a __Choice state__)
+<img width="1242" alt="step_function_05" src="https://user-images.githubusercontent.com/725743/129587574-ef2379df-4ef0-4ade-816f-d1210a051294.png">
 * Stop an execution with a failure or success (a __Fail or Succeed state__)
+<img width="1618" alt="step_function_04" src="https://user-images.githubusercontent.com/725743/129553794-1f86a42f-a17a-4519-b650-99d44c137dd5.png">
 * Simply pass its input to its output or inject some fixed data (a __Pass state__)
 * Provide a delay for a certain amount of time or until a specified time/date (a __Wait state__)
 * Begin parallel branches of execution (a __Parallel state__)
