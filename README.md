@@ -700,8 +700,14 @@ There are 8 states
 
 * __Express Workflows__ are ideal for high-volume, event-processing workloads such as IoT data ingestion, streaming data processing and transformation, and mobile application backends. They can run for up to five minutes. Express Workflows employ an at-least-once model, where there is a possibility that an execution might be run more than once. This makes them ideal for orchestrating idempotent actions.
 
+<img width="1184" alt="step_function_standard_vs_express_01" src="https://user-images.githubusercontent.com/725743/130078854-e4020036-46b0-45df-aae4-f87de89b0d54.png">
+<img width="1688" alt="step_function_standard_vs_express_02" src="https://user-images.githubusercontent.com/725743/130078870-955b2a0e-36eb-4067-b43f-f0feb03014a4.png">
+<img width="1184" alt="step_function_standard_vs_express_03" src="https://user-images.githubusercontent.com/725743/130078880-55e59648-9890-4df5-a465-1d01648a3477.png">
+<img width="1184" alt="step_function_standard_vs_express_04" src="https://user-images.githubusercontent.com/725743/130078885-2a320d0c-bf3b-425b-9d85-3020c246bca8.png">
+<img width="1184" alt="step_function_standard_vs_express_05" src="https://user-images.githubusercontent.com/725743/130078890-a22781d7-95fc-43d8-8739-5e21b97cd6cd.png">
+
+---
 #### Activities
-<img width="1255" alt="step_function_activities" src="https://user-images.githubusercontent.com/725743/130065547-882373dd-35a3-47cc-8926-b7d52a18f9b0.png">
 
 * In AWS Step Functions, you can create activities. Activities are used as a way to associate code running somewhere like Amazon EC2 or Amazon ECS, or any external compute (known as an activity worker) with a specific task in a state machine.
 
@@ -718,6 +724,8 @@ There are 8 states
 * A task token is a unique identifier for the task. 
 
 * After the activity worker completes its work, it can provide a report of its success or failure by using SendTaskSuccess or SendTaskFailure. These two calls use the taskToken provided by GetActivityTask to associate the result with that task.
+
+<img width="1255" alt="step_function_activities" src="https://user-images.githubusercontent.com/725743/130065547-882373dd-35a3-47cc-8926-b7d52a18f9b0.png">
 
 #### Callback Pattern Examples
 * Some applications will require a callback pattern to be implemented. Callback tasks provide a way to pause a workflow until a task token is returned. A task might need to wait for a human approval, integrate with a third party, or call legacy systems. For tasks like these, you can pause Step Functions indefinitely, and wait for an external process or workflow to complete.
