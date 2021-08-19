@@ -679,12 +679,22 @@ There are 8 states
 #### Service Integration Patterns
 * AWS Step Functions integrates with services directly in the Amazon States Language. 
 * You can control these AWS services using three service integration patterns:
-    * Call a service and let Step Functions progress to the next state immediately after it gets an HTTP response.  
+    * __Request Response__: Call a service and let Step Functions progress to the next state immediately after it gets an HTTP response.  
+    Example: DynamoDB integration.  
     Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-default
-    * Call a service and have Step Functions wait for a job to complete.  
+    <img width="1252" alt="step_function_request_response" src="https://user-images.githubusercontent.com/725743/130063385-0ca61dcd-8cee-4ddc-a922-9e24b2f18f48.png">
+
+
+
+    * __Run a Job (sync)__: Call a service and have Step Functions wait for a job to complete.  
     Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-sync
-    * Call a service with a task token and have Step Functions wait until that token is returned with a payload.  
+    <img width="1705" alt="step_function_run_job" src="https://user-images.githubusercontent.com/725743/130063379-1c0939e1-0968-42c4-bbd6-2e056e2a9046.png">
+    <img width="1248" alt="step_function_run_job_sync" src="https://user-images.githubusercontent.com/725743/130063364-a9360857-b749-4eae-9824-8fc12729feca.png">
+
+    * __Wait for Callback (WaitForTaskToken)__: Call a service with a task token and have Step Functions wait until that token is returned with a payload.  
     Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-wait-token   
+    <img width="1252" alt="step_function_wait_for_callback" src="https://user-images.githubusercontent.com/725743/130063399-1cdad935-4f40-4e0a-a8f0-4eeabbed36e1.png">
+
 
 ### Reading 03: Express vs Standard, Callback URL and Task Tokens
 #### Express vs Standard State Machines
