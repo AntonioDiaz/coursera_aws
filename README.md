@@ -684,8 +684,6 @@ There are 8 states
     Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-default
     <img width="1252" alt="step_function_request_response" src="https://user-images.githubusercontent.com/725743/130063385-0ca61dcd-8cee-4ddc-a922-9e24b2f18f48.png">
 
-
-
     * __Run a Job (sync)__: Call a service and have Step Functions wait for a job to complete.  
     Read more about this pattern here: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-sync
     <img width="1705" alt="step_function_run_job" src="https://user-images.githubusercontent.com/725743/130063379-1c0939e1-0968-42c4-bbd6-2e056e2a9046.png">
@@ -703,6 +701,8 @@ There are 8 states
 * __Express Workflows__ are ideal for high-volume, event-processing workloads such as IoT data ingestion, streaming data processing and transformation, and mobile application backends. They can run for up to five minutes. Express Workflows employ an at-least-once model, where there is a possibility that an execution might be run more than once. This makes them ideal for orchestrating idempotent actions.
 
 #### Activities
+<img width="1255" alt="step_function_activities" src="https://user-images.githubusercontent.com/725743/130065547-882373dd-35a3-47cc-8926-b7d52a18f9b0.png">
+
 * In AWS Step Functions, you can create activities. Activities are used as a way to associate code running somewhere like Amazon EC2 or Amazon ECS, or any external compute (known as an activity worker) with a specific task in a state machine.
 
 * Since this code lives in an environment that is not as tightly integrated with AWS Step Functions, like AWS Lambda for example, there is a specific way in which you need to setup your communications between your activity worker and your state machine.
