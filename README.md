@@ -44,6 +44,7 @@
         - [Activities](#activities)
         - [Callback Pattern Examples](#callback-pattern-examples)
         - [AWS Step Functions Best Practices](#aws-step-functions-best-practices)
+    - [Reading 03: SQS, SNS, EventBridge](#reading-03-sqs-sns-eventbridge)
 - [Week 05](#week-05)
 - [Week 06](#week-06)
 
@@ -757,6 +758,18 @@ There are 8 states
 
 * Read more about Step Functions Best Practices here: https://docs.aws.amazon.com/step-functions/latest/dg/bp-express.html
 
+### Reading 03: SQS, SNS, EventBridge
+
+<img width="1354" alt="event_router" src="https://user-images.githubusercontent.com/725743/130205400-675636c2-c06c-46ba-9261-7f81ea7e5405.png">
+
+* Amazon Simple Queue Service
+Find Amazon SQS documentation here: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html
+
+* Amazon Simple Notification Service
+Find Amazon SNS documentation here: https://docs.aws.amazon.com/sns/latest/dg/sns-getting-started.html
+
+* Amazon EventBridge
+Find Amazon EventBridge documentation here: https://docs.aws.amazon.com/eventbridge/index.html
 
 ## Week 05
 
