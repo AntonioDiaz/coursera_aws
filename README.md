@@ -789,10 +789,11 @@ Find Amazon EventBridge documentation here: https://docs.aws.amazon.com/eventbri
 The compute resources running your application logic send data about their work as segments. A segment provides the resource's name, details about the request, and details about the work done.
 
 * __Subsegments__  
-A segment can break down the data about the work done into subsegments. Subsegments provide more granular timing information and details about downstream calls that your application made to fulfill the original request. A subsegment can contain additional details about a call to an AWS service, an external HTTP API, or an SQL database. You can even define arbitrary subsegments to instrument specific functions or lines of code in your application.
+A segment can break down the data about the work done into subsegments. Subsegments provide more granular timing information and details about downstream calls that your application made to fulfill the original request. A subsegment can contain additional details about a call to an AWS service, an external HTTP API, or an SQL database. You can even define arbitrary subsegments to instrument specific functions or lines of code in your application.  
 
-* __Service graph__  
+* Service graph  
 <img width="1354" alt="monitoring_service_graph" src="https://user-images.githubusercontent.com/725743/130444183-883da75b-e386-46af-81d4-5dbc05e6e980.png">
+
     * A service graph is a JSON document that contains information about the services and resources that make up your application
     * X-Ray uses the data that your application sends to generate a service graph. Each AWS resource that sends data to X-Ray appears as a service in the graph. Edges connect the services that work together to serve requests. Edges connect clients to your application, and your application to the downstream services and resources that it uses.
 
