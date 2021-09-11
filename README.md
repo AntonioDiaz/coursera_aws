@@ -54,6 +54,13 @@
         - [Lambda Example](#lambda-example)
     - [Reading 02: Logging](#reading-02-logging)
 - [Week 06](#week-06)
+    - [Reading 01: Edge Locations, Response Caching, Lambda @ Edge](#reading-01-edge-locations-response-caching-lambda--edge)
+        - [AWS Global Infrastructure: Edge Locations](#aws-global-infrastructure-edge-locations)
+        - [Amazon API Gateway Response Caching](#amazon-api-gateway-response-caching)
+        - [AWS Lambda @ Edge](#aws-lambda--edge)
+    - [Reading 02: API Gateway Proxy, HTTP APIs, API Gateway Takeaways](#reading-02-api-gateway-proxy-http-apis-api-gateway-takeaways)
+        - [Amazon API Gateway Proxy for AWS Services](#amazon-api-gateway-proxy-for-aws-services)
+        - [Amazon API Gateway HTTP APIs](#amazon-api-gateway-http-apis)
 
 <!-- /TOC -->
 
@@ -918,3 +925,41 @@ Read more about logging and API Gateway here: https://docs.aws.amazon.com/apigat
 <img width="1648" alt="dragons_project_diagram" src="https://user-images.githubusercontent.com/725743/130594267-f18c6aef-b27a-41e0-b879-16bf01cfeab3.png">
 
 ## Week 06
+
+### Reading 01: Edge Locations, Response Caching, Lambda @ Edge
+#### AWS Global Infrastructure: Edge Locations
+AWS Edge Locations are sites that Amazon CloudFront uses to cache copies of your content for faster delivery to users around the world. By deploying content to the edge locations, the latency in your application can be reduced for end users since they are accessing the resources at a location that is physically closer to them than the region you hosted your resources in originally. 
+
+Read more about Amazon CloudFront and Edge Locations here: https://aws.amazon.com/cloudfront/  
+
+#### Amazon API Gateway Response Caching
+You can enable API caching in Amazon API Gateway to cache your endpoint's responses. With caching, you can reduce the number of calls made to your endpoint and also improve the latency of requests to your API.
+
+When you enable caching for a stage, API Gateway caches responses from your endpoint for a specified time-to-live (TTL) period, in seconds. API Gateway then responds to the request by looking up the endpoint response from the cache instead of making a request to your endpoint. The default TTL value for API caching is 300 seconds. The maximum TTL value is 3600 seconds. TTL=0 means caching is disabled.
+
+To read more about Response Caching click here: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html
+
+#### AWS Lambda @ Edge
+Lambda@Edge is a feature of Amazon CloudFront that lets you run code closer to users of your application, which improves performance and reduces latency. With Lambda@Edge, you don't have to provision or manage infrastructure in multiple locations around the world. You pay only for the compute time you consume - there is no charge when your code is not running.
+
+Read about use cases of Lambda@Edge here:  https://aws.amazon.com/lambda/edge/#Website_Security_and_Privacy
+
+Read more general information about Lambda@Edge here: https://docs.aws.amazon.com/lambda/latest/dg/lambda-edge.html
+
+
+### Reading 02: API Gateway Proxy, HTTP APIs, API Gateway Takeaways
+#### Amazon API Gateway Proxy for AWS Services
+One API Gateway integration type is the AWS integration type. This allows you to proxy other AWS services with API Gateway.
+
+Each method you setup for a reason using an AWS integration type would expose one API or AWS service action. Because the AWS API will need the data in a specific format that your clients likely won’t be using, you must configure both the integration request and integration response and set up necessary data mappings from the method request to the integration request, and from the integration response to the method response. This will transform the request and response to adhere to the specifications needed for the AWS API.
+
+Read more about API Gateway integration types here: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-integration-types.html
+
+#### Amazon API Gateway HTTP APIs
+HTTP APIs are designed for low-latency, cost-effective AWS Lambda proxy and HTTP proxy APIs. HTTP APIs support OIDC and OAuth 2.0 authorization, and come with built-in support for CORS and automatic deployments. Previous-generation REST APIs currently offer more features, and full control over API requests and responses.
+
+Read about how to choose between REST and HTTP APIs here: https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html
+
+
+
+
